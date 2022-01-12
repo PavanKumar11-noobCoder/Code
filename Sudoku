@@ -4,6 +4,13 @@
 
 //Main technique followed here is backtracking
 
+//Below is the Java solution for this problem and its solved based on Simple Backtracking
+
+//Here the Time Complexity for this Solution is O(9 ^ (N * N))
+//Space Complexity O(N * N)
+
+//It can be further solved efficiently using Bit Masking
+
 import java.util.*;
 
 //Suduko Class
