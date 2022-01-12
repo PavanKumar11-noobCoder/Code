@@ -1,0 +1,147 @@
+//Sudoku 
+
+/*Sudoku is a logic-based, combinatorial number-placement puzzle. In classic sudoku, the objective is to fill a 9 × 9 grid with digits so that each column, each row, and each of the nine 3 × 3 subgrids that compose the grid contain all of the digits from 1 to 9.*/
+
+//Main technique followed here is backtracking
+
+import java.util.*;
+
+//Suduko Class
+class Suduko {
+    
+    //To check whether the suduko is solved or not
+    static boolean solved;
+    
+    //Board to be solved is passed as argument
+    public Suduko(int[][] board) {
+        //Since its static to change previous result, Explicitly assigned to false
+        solved = false;
+        
+        //Here itself the suduko function is called with arguments board and initially row = 0, col = 0;
+        sudukoSolver(board, 0, 0);
+    }
+    
+    private static void sudukoSolver(int[][] board, int row, int col) {
+        //Base Condition
+        if(row == 9) {
+            solved = true;
+            
+            //If the Given Board is solvable, then the flow will come here to print final result;
+            display(board);
+            return;
+        }
+        
+        //Sub-Base Condition
+        if(col == 9) {
+            sudukoSolver(board, row + 1, 0);
+            return;
+        }
+        
+        //If the given cell is empty, then check whether which digit to be placed;
+        if(board[row][col] == 0) {
+            for(int digit = 1; digit <= 9; digit ++) {
+            
+                //Here isValid function is to determine basic rules of suduko;
+                if(isValid(board, row, col, digit)) {
+                    board[row][col] = digit;
+                    
+                    sudukoSolver(board, row, col + 1);
+                    
+                    if(!solved) {
+                        board[row][col] = 0;
+                    }
+                }
+            }
+        }
+        else {
+            //If not empty, then continue to next column;
+            sudukoSolver(board, row, col + 1);
+        }
+    }
+    
+    private static boolean isValid(int[][] board, int row, int col, int digit) {
+    
+        //Checking Current Row
+        for(int rowCtr = 0; rowCtr < 9; rowCtr ++) {
+            if(board[rowCtr][col] == digit) {
+                return false;
+            }
+        }
+        
+        //Checking current Column
+        for(int colCtr = 0; colCtr < 9; colCtr ++) {
+            if(board[row][colCtr] == digit) {
+                return false;
+            } 
+        }
+        
+        //Here to find whick 3 x 3 grid, basic math is applied
+        int startRow = row - (row % 3), startCol = col - (col % 3);
+        
+        //Checking current grid
+        for(int rowCtr = startRow; rowCtr < startRow + 3; rowCtr ++) {
+            for(int colCtr = startCol; colCtr < startCol + 3; colCtr ++) {
+                if(board[rowCtr][colCtr] == digit) {
+                    return false;
+                }
+            }
+        }
+        
+        //If the digit is not in above areas then it can be placed
+        return true;
+        
+    }
+    
+    private static void display(int[][] board) {
+    
+        //Printing Solved Board
+        for(int[] row : board) {
+        
+            for(int val : row) {
+                System.out.print(val + " ");
+            }
+            
+            System.out.println();
+        }
+        
+    }
+    
+    //ToString method is used to print the Result
+    
+    @Override 
+    public String toString() {
+    
+        //If given board can't be solved, then its an "Invalid Suduko" board;
+        if(!solved) {
+            return "Invalid Suduko";
+        }
+        
+        return "";
+    }
+    
+};
+
+public class Main {
+
+    public static void main(String[] args) {
+      //Using Scanner Class to get modified input
+      Scanner io = new Scanner(System.in);
+      
+      //9 x 9 board is declared
+      int[][] board = new int[9][9];
+      
+      //Getting Input
+      for(int row = 0; row < 9; row ++) {
+          for(int col = 0; col < 9; col ++) {
+              board[row][col] = io.nextInt();
+          }
+      }
+      
+      //Passing the input board
+      Suduko res = new Suduko(board);
+
+      //Finally result is printed;
+      System.out.print(res);
+      
+    }
+}
